@@ -232,8 +232,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
     // TODO: refactor updateUI (rename)
-    // TODO: start getting database to work with each user
-    // TODO: how to create Account (?) -- new activity or just a modal popup?
+    // TODO: get Facebook login to create new user if new user.
+    // TODO: should not allow anything to be touched in facebook.
+
     // TODO Conner: Retain journal entry string information.
     // OnCreate, fetch user day entry, history, and other(?)
     // New user sign up should make an entry in the database with given UUID.
