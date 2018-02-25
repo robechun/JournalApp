@@ -1,6 +1,6 @@
 package com.example.robertchung.journalapp;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +18,7 @@ import java.util.List;
 
 public class FragmentToday extends Fragment {
     private EditText entry;
+    private String entryText;
     View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,9 +37,31 @@ public class FragmentToday extends Fragment {
         textViewDate.setText(currentDate);
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            String entry_restored_text = savedInstanceState.getString("entry_text");
+            entry.setText(entry_restored_text, TextView.BufferType.EDITABLE);
 
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("entry_text",  entry.getText().toString());
 
     }
+
+    public String entryText() {
+        return entry.getText().toString();
+    }
+
+    public void setEntry(String text_entry) {
+        this.entry.setText(text_entry,TextView.BufferType.EDITABLE);
+    }
+}
 
 
 
