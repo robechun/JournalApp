@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 
 /**
  * A login screen that offers login via email/password.
@@ -38,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button mSignInButton;
     private EditText mEmailEditTextView;
     private EditText mPasswordEditTextView;
+    private TextView mSignUpTextView;
 
 
 
@@ -70,6 +74,7 @@ public class LoginActivity extends AppCompatActivity {
         mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mEmailEditTextView = (EditText) findViewById(R.id.emailLoginEditTextView);
         mPasswordEditTextView = (EditText) findViewById(R.id.passwordLoginEditTextView);
+        mSignUpTextView = (TextView) findViewById(R.id.sign_up_text);
 
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
@@ -103,6 +108,14 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mEmailEditTextView.getText().toString();
                 String pass = mPasswordEditTextView.getText().toString();
                 signInEmail(email, pass);
+            }
+        });
+
+        mSignUpTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -155,29 +168,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-    private void createAccountEmail(String email, String password) {
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, move to home screen
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-    }
 
     private void signInEmail(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -208,9 +199,11 @@ public class LoginActivity extends AppCompatActivity {
     // TODO: called when success/fail happens
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            System.out.println("one");
+            // Success, go to main activity
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
         } else {
-            System.out.println("two");
+            Log.w(TAG, "not going to mainActivity");
         }
 
 
@@ -239,9 +232,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
     // TODO: refactor updateUI (rename)
-    // TODO: make updateUI go to the other activity
     // TODO: start getting database to work with each user
     // TODO: how to create Account (?) -- new activity or just a modal popup?
     // TODO Conner: Retain journal entry string information.
+    // OnCreate, fetch user day entry, history, and other(?)
+    // New user sign up should make an entry in the database with given UUID.
 }
 
