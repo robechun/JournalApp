@@ -5,6 +5,8 @@
     <string name="title_dashboard">History</string>
     <string name="title_notifications">Accounts</string>
 
+    <string name="add_picture">Change Color:</string>
+
     <!-- Facebook stuff -->
     <string name="facebook_app_id">496765680719671</string>
     <string name="fb_login_protocol_scheme">fb496765680719671</string>
