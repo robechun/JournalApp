@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">JournalApp</string>
+<<<<<<< HEAD
     <string name="title_home">Today</string>
     <string name="title_dashboard">History</string>
     <string name="title_notifications">Accounts</string>
+=======
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- Facebook stuff -->
+    <string name="facebook_app_id">496765680719671</string>
+    <string name="fb_login_protocol_scheme">fb496765680719671</string>
+
+
+>>>>>>> 6360043a4f35bec5a73d91f2ad4c75f8ffe1f309
 </resources>
