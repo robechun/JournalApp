@@ -103,6 +103,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    // createAccountEmail creates an account with the given email
+    //  and password and logs in the user.
     private void createAccountEmail(String email, String password) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -126,6 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    // updateUI first populates the database with the new user and then goes to the main activity.
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             // Success, add entry to Firebase database and go to main Activity

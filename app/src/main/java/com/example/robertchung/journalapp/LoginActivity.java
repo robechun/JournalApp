@@ -150,7 +150,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
+    // Handles facebook login.
+    // If successful, checks if facebook user is already in our system and updates database if not.
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
@@ -186,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    // signInEmail attempts to sign into our application with the given email/password
+    // if successful, move onto the next screen.
     private void signInEmail(String email, String password) {
         final ConstraintLayout layout = this.findViewById(R.id.login);
         enableViews(layout, false);
@@ -250,6 +253,8 @@ public class LoginActivity extends AppCompatActivity {
 //        }
     }
 
+    // enableViews either enables or disables all the views within a view
+    //  to ensure no fishy stuff from the user
     private void enableViews(ViewGroup v, boolean enabled) {
         int childCount = v.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -291,8 +296,6 @@ public class LoginActivity extends AppCompatActivity {
 
     // TODO: Change login button color when its disabled
 
-    // TODO Conner: Retain journal entry string information.
-    // OnCreate, fetch user day entry, history, and other(?)
-    // New user sign up should make an entry in the database with given UUID.
+    // TODO: do I get all the stuff from database here before moving on or do I do it within next activity that I go to?
 }
 
