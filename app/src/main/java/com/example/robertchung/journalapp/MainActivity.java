@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.TextView;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,9 +29,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_DARK_THEME = "dark_theme";
     private String tempEntry;
     private Fragment fragment;
-    private Fragment fragment_today = new FragmentToday();
-    private Fragment fragment_history = new FragmentHistory();
-    private Fragment fragment_account = new FragmentAccount();
+    private Fragment fragment_today;
+    private Fragment fragment_history;
+    private Fragment fragment_account;
+    private FragmentManager fragManCreate;
+    private FragmentTransaction fragTranCreate;
     Switch toggle;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -42,17 +45,17 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     fragment = fragment_today;
-                    fragTran.replace(R.id.fragment_place, fragment);
+                    fragTran.replace(R.id.fragment_place, fragment_today);
                     fragTran.commit();
                     return true;
                 case R.id.navigation_dashboard:
                     fragment = fragment_history;
-                    fragTran.replace(R.id.fragment_place, fragment);
+                    fragTran.replace(R.id.fragment_place, fragment_history);
                     fragTran.commit();
                     return true;
                 case R.id.navigation_notifications:
                     fragment = fragment_account;
-                    fragTran.replace(R.id.fragment_place, fragment);
+                    fragTran.replace(R.id.fragment_place, fragment_account);
                     fragTran.commit();
                     return true;
             }
@@ -64,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
-
         if(useDarkTheme) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
         }
@@ -83,11 +85,14 @@ public class MainActivity extends AppCompatActivity {
                 toggleTheme(isChecked);
             }
         });
-
         if (savedInstanceState != null) {
-            fragment = getSupportFragmentManager().getFragment(savedInstanceState, "myFragment");
             Boolean whichTheme = savedInstanceState.getBoolean("theme");
             toggle.setChecked(whichTheme);
+        }
+        else{
+            fragment_today = new FragmentToday();
+            fragment_history = new FragmentHistory();
+            fragment_account = new FragmentAccount();
         }
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -95,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         //retrieving fragment position and theme
         SharedPreferences sharedPref = getSharedPreferences("PREFS",0);
         if(sharedPref.contains("initialized")) {
-
             String temp = sharedPref.getString("fragment_display", "");
             BottomNavigationView bottomNavigationView;
             bottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
@@ -124,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onPause()");
         SharedPreferences sharedPref = getSharedPreferences("PREFS",0);
         SharedPreferences.Editor editor = sharedPref.edit();
-
         String whichFragment;
         if (fragment instanceof FragmentAccount) {
             whichFragment = "account";
@@ -158,10 +161,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-       // outState.putBoolean("theme", toggle.isChecked());
-       // getSupportFragmentManager().putFragment(outState, "myFragment", fragment);
-
     }
 
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
-//TODO: Make Fragment Today's EditText text string persist.
