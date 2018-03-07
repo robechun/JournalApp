@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             FragmentManager fragMan = getSupportFragmentManager();
             FragmentTransaction fragTran = fragMan.beginTransaction();
+            //switches the fragment that is displayed based on navigation item selected
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     fragment = fragment_today;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean useDarkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
+        //sets theme depending on users choice
         if(useDarkTheme) {
             setTheme(R.style.AppTheme_Dark_NoActionBar);
         }
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //switch allows users to change the theme
         toggle = (Switch) findViewById(R.id.theme_switch);
         toggle.setChecked(useDarkTheme);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 toggleTheme(isChecked);
             }
         });
+        //if there is a saved state then it will pull the theme from there or else it will make new fragments
         if (savedInstanceState != null) {
             Boolean whichTheme = savedInstanceState.getBoolean("theme");
             toggle.setChecked(whichTheme);
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         //retrieving fragment position and theme
         SharedPreferences sharedPref = getSharedPreferences("PREFS",0);
+        //if a sharedPref has been initialized it will change the navigation selection to the appropriate one
         if(sharedPref.contains("initialized")) {
             String temp = sharedPref.getString("fragment_display", "");
             BottomNavigationView bottomNavigationView;
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("PREFS",0);
         SharedPreferences.Editor editor = sharedPref.edit();
         String whichFragment;
+        //saves which type of fragment the last one that was on the screen before it paused was
         if (fragment instanceof FragmentAccount) {
             whichFragment = "account";
         }

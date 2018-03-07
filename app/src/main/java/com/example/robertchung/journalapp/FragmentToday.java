@@ -23,6 +23,7 @@ public class FragmentToday extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //retrieves entryText from onSaved
         if(savedInstanceState != null && savedInstanceState.containsKey(KEY_ADAPTER_STATE)){
             entryText = savedInstanceState.getString(KEY_ADAPTER_STATE, "");
         }
@@ -41,10 +42,12 @@ public class FragmentToday extends Fragment {
         Calendar calendar = Calendar.getInstance();
         String currentDate = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
         entry = (EditText) getView().findViewById(R.id.entry_edit);
+        //sets text to entryText if savedInstance exists
         if (savedInstanceState != null) {
             entry.setText(entryText, TextView.BufferType.EDITABLE);
 
         }
+        //sets entry.text to data from onPause
         SharedPreferences sharedPref = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         if(sharedPref.contains("initialized")) {
             entry.setText(sharedPref.getString("text",""), TextView.BufferType.EDITABLE);
@@ -69,6 +72,7 @@ public class FragmentToday extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        //stores text in shared preferences
         SharedPreferences preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("text", entryText());
