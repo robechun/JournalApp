@@ -1,5 +1,6 @@
 package com.example.robertchung.journalapp;
 
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class FragmentAccount extends Fragment {
@@ -30,12 +32,15 @@ public class FragmentAccount extends Fragment {
         logout = (Button) getView().findViewById(R.id.logout);
         mAuth = FirebaseAuth.getInstance();
 
+
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mAuth.signOut();
+                LoginManager.getInstance().logOut();
             }
         });
 
     }
+
 }
