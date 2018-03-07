@@ -2,11 +2,13 @@ package com.example.robertchung.journalapp;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -171,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void signInEmail(String email, String password) {
+        // TODO final ConstraintLayout layout = this.findViewById(R.id.login);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -179,6 +182,7 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // TODO enableViews(layout, false);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -208,7 +212,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-
 //        hideProgressDialog();
 //        if (user != null) {
 //            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt,
@@ -230,6 +233,15 @@ public class LoginActivity extends AppCompatActivity {
 //        }
     }
 
+    private void enableViews(View v, boolean enabled) {
+        if (v instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) v;
+            for (int i = 0;i<vg.getChildCount();i++) {
+                enableViews(vg.getChildAt(i), enabled);
+            }
+        }
+        v.setEnabled(enabled);
+    }
 
     // TODO: refactor updateUI (rename)
     // TODO: get Facebook login to create new user if new user.
