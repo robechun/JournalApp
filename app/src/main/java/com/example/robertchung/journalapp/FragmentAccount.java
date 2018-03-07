@@ -1,5 +1,6 @@
 package com.example.robertchung.journalapp;
 
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ public class FragmentAccount extends Fragment {
             public void onClick(View view) {
                 mAuth.signOut();
                 LoginManager.getInstance().logOut();
+                getActivity().onBackPressed();
             }
         });
 
