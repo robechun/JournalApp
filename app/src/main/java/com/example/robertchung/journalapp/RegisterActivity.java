@@ -133,10 +133,10 @@ public class RegisterActivity extends AppCompatActivity {
             // Make new user account
             String uid = user.getUid();
             String em = mEmailEditText.getText().toString();
-            Account newAcc = new Account(em);
+            Account newAcc = new Account(em, false);
 
             // Send to database
-            mDatabase.child(uid).setValue(newAcc);
+            mDatabase.child("Users").child(uid).setValue(newAcc);
 
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             finish();

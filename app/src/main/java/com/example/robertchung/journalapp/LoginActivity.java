@@ -28,6 +28,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -38,12 +43,14 @@ import org.w3c.dom.Text;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
-    private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
     private Button mSignInButton;
     private EditText mEmailEditTextView;
     private EditText mPasswordEditTextView;
     private TextView mSignUpTextView;
+
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
 
 
 
@@ -72,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Auth for Firebase
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mSignInButton = (Button) findViewById(R.id.sign_in_button);
         mEmailEditTextView = (EditText) findViewById(R.id.emailLoginEditTextView);
@@ -146,6 +154,9 @@ public class LoginActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
+        final ConstraintLayout layout = this.findViewById(R.id.login);
+        enableViews(layout, false);
+
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -155,6 +166,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, move to home screen
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            checkUserExists(user);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -162,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            enableViews(layout, true);
                         }
 
                     }
@@ -173,7 +187,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void signInEmail(String email, String password) {
-        // TODO final ConstraintLayout layout = this.findViewById(R.id.login);
+        final ConstraintLayout layout = this.findViewById(R.id.login);
+        enableViews(layout, false);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -182,7 +198,6 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            // TODO enableViews(layout, false);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -190,9 +205,9 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            enableViews(layout, true);
                         }
 
-                        // ...
                     }
                 });
     }
@@ -206,6 +221,8 @@ public class LoginActivity extends AppCompatActivity {
             // Success, go to main activity
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
+            final ConstraintLayout layout = this.findViewById(R.id.login);
+            enableViews(layout, true);
         } else {
             Log.w(TAG, "not going to mainActivity");
         }
@@ -233,19 +250,46 @@ public class LoginActivity extends AppCompatActivity {
 //        }
     }
 
-    private void enableViews(View v, boolean enabled) {
-        if (v instanceof ViewGroup) {
-            ViewGroup vg = (ViewGroup) v;
-            for (int i = 0;i<vg.getChildCount();i++) {
-                enableViews(vg.getChildAt(i), enabled);
+    private void enableViews(ViewGroup v, boolean enabled) {
+        int childCount = v.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            if (v.getChildAt(i) instanceof ViewGroup) {
+                enableViews((ViewGroup) v.getChildAt(i), enabled);
+            } else {
+                v.getChildAt(i).setEnabled(enabled);
             }
         }
-        v.setEnabled(enabled);
     }
 
-    // TODO: refactor updateUI (rename)
-    // TODO: get Facebook login to create new user if new user.
-    // TODO: should not allow anything to be touched in facebook.
+    // checkUserExists checks whether or not a user exists
+    //  This is for when a user logs-in through facebook
+    //  If the user does not exist, then we create a new User in the database.
+    private void checkUserExists(FirebaseUser user) {
+        final FirebaseUser us = user;
+        // Check if the user exists (for facebook)
+        mDatabase.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(us.getUid()).exists()) {
+                    return;
+                } else {
+                    // Make new user account
+                    String uid = us.getUid();
+                    Account newAcc = new Account("", true);
+
+                    // Send to database
+                    mDatabase.child("Users").child(uid).setValue(newAcc);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    // TODO: Change login button color when its disabled
 
     // TODO Conner: Retain journal entry string information.
     // OnCreate, fetch user day entry, history, and other(?)

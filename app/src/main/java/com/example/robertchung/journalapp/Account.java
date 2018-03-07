@@ -7,6 +7,7 @@ package com.example.robertchung.journalapp;
 public class Account {
     private String email;
     private String name;
+    boolean fromFacebook;
 
     // TODO: Do I really need these fields?
     // private String/dateTime dates [];
@@ -20,9 +21,14 @@ public class Account {
         name = "";
     }
 
-    public Account(String em) {
-        email = em;
+    public Account(String em, boolean fromFb) {
+        if (!fromFb){
+            email = em;
+        } else {
+            email = "Facebook";
+        }
         name = "Robert"; // Default for now, TODO
+        fromFacebook = fromFb;
     }
 
 
