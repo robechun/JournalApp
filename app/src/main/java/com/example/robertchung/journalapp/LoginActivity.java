@@ -226,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             final ConstraintLayout layout = this.findViewById(R.id.login);
             enableViews(layout, true);
+            clearViews();
         } else {
             Log.w(TAG, "not going to mainActivity");
         }
@@ -292,6 +293,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Clears the textviews so as to not persist
+    private void clearViews() {
+        mEmailEditTextView.setText("");
+        mPasswordEditTextView.setText("");
     }
 
     // TODO: Change login button color when its disabled
