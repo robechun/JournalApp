@@ -147,7 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             // Send to database
             mDatabase.child("Users").child(uid).setValue(newAcc);
-            mDatabase.child("Users").child(uid).child("Entries").child(currentDate).setValue(new Journal());
+            mDatabase.child("Users").child(uid).child("Entries").child(currentDate).setValue("");
 
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             finish();
