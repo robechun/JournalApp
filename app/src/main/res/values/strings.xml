@@ -27,5 +27,8 @@
         completions."
     </string>
 
+    <!-- Strings Related to notifications -->
+    <string name="title">Daily Journal</string>
+    <string name="time">It is time to journal!</string>
 
 </resources>
