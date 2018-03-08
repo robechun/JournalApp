@@ -1,22 +1,39 @@
 package com.example.robertchung.journalapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TimePicker;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Calendar;
+
 public class FragmentAccount extends Fragment {
 
     private Button logout;
+
     private FirebaseAuth mAuth;
+    private AlarmManager alarm_manager;
+    private TimePicker timepicker;
+    private Button on;
+    private Button off;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,12 +44,30 @@ public class FragmentAccount extends Fragment {
 
     }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stores text in shared preferences
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("hour", timepicker.getHour());
+        editor.putInt("minute",timepicker.getMinute());
+        editor.putBoolean("initialized",true);
+        //commit edits to persistent storage (apply does this in the background)
+        editor.apply();
+    }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         logout = (Button) getView().findViewById(R.id.logout);
         mAuth = FirebaseAuth.getInstance();
-
+        on = (Button) getView().findViewById(R.id.on);
+        off = (Button) getView().findViewById(R.id.off);
+        timepicker = (TimePicker) getView().findViewById(R.id.timePicker);
+        SharedPreferences sharedPref = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        if(sharedPref.contains("initialized")) {
+            timepicker.setHour(sharedPref.getInt("hour",0));
+            timepicker.setMinute(sharedPref.getInt("minute",0));
+        }
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +77,40 @@ public class FragmentAccount extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+
+        on.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notificationOn(timepicker.getHour(),timepicker.getMinute());
+            }
+        });
+
+        off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                notificationOff();
+            }
+        });
+
+    }
+    private void notificationOn(int hour, int minute) {
+            Intent alarmIntent = new Intent(this.getActivity(), AlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getActivity(), 0, alarmIntent, 0);
+
+            AlarmManager manager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+            calendar.set(Calendar.SECOND, 1);
+
+            manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY, pendingIntent);
+
+
+    }
+    private void notificationOff() {
 
     }
 
