@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
@@ -138,8 +141,13 @@ public class RegisterActivity extends AppCompatActivity {
             String em = mEmailEditText.getText().toString();
             Account newAcc = new Account(em, false);
 
+            Calendar calendar = Calendar.getInstance();
+            String currentDate = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime()).replaceAll("/","");
+
+
             // Send to database
             mDatabase.child("Users").child(uid).setValue(newAcc);
+            mDatabase.child("Users").child(uid).child("Entries").child(currentDate).setValue(new Journal());
 
             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
             finish();
