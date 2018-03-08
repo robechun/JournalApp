@@ -1,5 +1,6 @@
 package com.example.robertchung.journalapp;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,10 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -39,6 +35,7 @@ public class FragmentToday extends Fragment {
     Calendar calendar;
     private String userUID;
     private String dateFormatted;
+    private String newDateFormatted;
 
 
     View view;
@@ -50,7 +47,8 @@ public class FragmentToday extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         calendar = Calendar.getInstance();
-        dateFormatted = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime()).replaceAll("/","");
+        dateFormatted = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
+        newDateFormatted = dateFormatted.replaceAll("/","");
 
         userUID = mAuth.getCurrentUser().getUid();
 
@@ -86,10 +84,10 @@ public class FragmentToday extends Fragment {
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
-                        if (snapshot.child(dateFormatted).exists()) {
+                        if (snapshot.child(newDateFormatted).exists()) {
                             Map<String, Object> m = (Map<String, Object>) snapshot.getValue();
-                            System.out.println("YO" + m.get(dateFormatted));
-                            entry.setText(m.get(dateFormatted).toString());
+                            System.out.println("YO" + m.get(newDateFormatted));
+                            entry.setText(m.get(newDateFormatted).toString());
                         } else {
                             entry.setText("");
                         }
@@ -106,9 +104,10 @@ public class FragmentToday extends Fragment {
             if (sharedPref.contains("initialized")) {
                 entry.setText(sharedPref.getString("text", ""), TextView.BufferType.EDITABLE);
             }
-            TextView textViewDate = (TextView) getView().findViewById(R.id.text_view_date);
-            textViewDate.setText(dateFormatted);
+
         }
+        TextView textViewDate = (TextView) getView().findViewById(R.id.text_view_date);
+        textViewDate.setText(dateFormatted);
     }
 
     @Override
