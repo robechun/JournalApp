@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +29,9 @@ public class FragmentAccount extends Fragment {
     private TimePicker timepicker;
     private Button on;
     private Button off;
-
+    AlarmManager manager;
+    PendingIntent pendingIntent;
+    Intent alarmIntent;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,11 @@ public class FragmentAccount extends Fragment {
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        alarmIntent = new Intent(this.getActivity(), AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this.getActivity(), 0, alarmIntent, 0);
+
+        manager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
+
         logout = (Button) getView().findViewById(R.id.logout);
         mAuth = FirebaseAuth.getInstance();
         on = (Button) getView().findViewById(R.id.on);
@@ -94,10 +102,6 @@ public class FragmentAccount extends Fragment {
 
     }
     private void notificationOn(int hour, int minute) {
-            Intent alarmIntent = new Intent(this.getActivity(), AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getActivity(), 0, alarmIntent, 0);
-
-            AlarmManager manager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
@@ -107,10 +111,15 @@ public class FragmentAccount extends Fragment {
 
             manager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_DAY, pendingIntent);
-
+        Toast.makeText(getActivity().getApplicationContext(), "Alarm Set.", Toast.LENGTH_SHORT).show();
 
     }
     private void notificationOff() {
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getApplicationContext(), 1253, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(getActivity().ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        Toast.makeText(getActivity().getApplicationContext(), "Alarm Off.", Toast.LENGTH_SHORT).show();
 
     }
 
