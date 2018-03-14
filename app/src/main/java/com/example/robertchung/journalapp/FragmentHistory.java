@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class FragmentHistory extends Fragment {
     private final int REQUEST_TEXT = 0;
@@ -95,32 +95,31 @@ public class FragmentHistory extends Fragment {
         // you can get entry by doing a entries.get(<INSERT DATE HERE>) ** HAS TO BE CORRECT FORMATTED DATE
         // For above, might have to redo formatting so that it's consistent like 030418
 
-        ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listOfDates);
-        ListView historyListView = (ListView) getView().findViewById(R.id.historyList);
-        historyListView.setAdapter(historyAdapter);
+        if(listOfDates != null) {
+            ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listOfDates);
+            ListView historyListView = (ListView) getView().findViewById(R.id.historyList);
+            historyListView.setAdapter(historyAdapter);
+            historyListView.setOnItemClickListener(
+                    new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String date = ((TextView)view).getText().toString();
+                            String text = entries.get(date).toString();
+                            AlertDialog.Builder myAlert = new AlertDialog.Builder(getActivity());
+                            myAlert.setMessage(text)
+                                    .setPositiveButton("Finished!", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setTitle(date)
+                                    .create();
+                            myAlert.show();
 
-        historyListView.setOnItemClickListener(
-                new AdapterView.OnItemClickListener(){
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        //Intent intent = new Intent(getActivity(), DisplayHistoryText.class);
-
-                        //startActivityForResult(intent, REQUEST_TEXT);
-                        AlertDialog.Builder myAlert = new AlertDialog.Builder(getActivity());
-                        myAlert.setMessage("Place data from database here.")
-                                .setPositiveButton("Finished!", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setTitle("Set to the date of the entry")
-                                .create();
-                        myAlert.show();
-
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 }
