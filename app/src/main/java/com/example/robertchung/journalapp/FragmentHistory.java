@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class FragmentHistory extends Fragment {
     private final int REQUEST_TEXT = 0;
@@ -35,10 +36,9 @@ public class FragmentHistory extends Fragment {
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                        //Intent intent = new Intent(getActivity(), DisplayHistoryText.class);
-
-                        //startActivityForResult(intent, REQUEST_TEXT);
+                        //this gives you the string value of the item you clicked.
+                        String date = ((TextView)view).getText().toString();
+                        //TODO: use this information to get the entry
                         AlertDialog.Builder myAlert = new AlertDialog.Builder(getActivity());
                         myAlert.setMessage("Place data from database here.")
                                 .setPositiveButton("Finished!", new DialogInterface.OnClickListener() {
@@ -47,7 +47,7 @@ public class FragmentHistory extends Fragment {
                                         dialog.dismiss();
                                     }
                                 })
-                                .setTitle("Set to the date of the entry")
+                                .setTitle(date)
                                 .create();
                         myAlert.show();
 
