@@ -3,6 +3,7 @@ package com.example.robertchung.journalapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.health.SystemHealthManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -146,14 +147,14 @@ public class FragmentToday extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(dateFormatted).exists()) {
-                    mDatabase.child("Users").child(userUID).child("Entries").child(dateFormatted).setValue(entryText());
+                    mDatabase.child("Users").child(userUID).child("Entries").child(newDateFormatted).setValue(entryText());
 
                 } else {
                     // Make a new journal object and send it to database
                     Journal newEntry = new Journal(entryText());
 
                     // Send to database
-                    mDatabase.child("Users").child(userUID).child("Entries").child(dateFormatted).setValue(newEntry);
+                    mDatabase.child("Users").child(userUID).child("Entries").child(newDateFormatted).setValue(entryText());
                 }
             }
 

@@ -13,8 +13,43 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 public class FragmentHistory extends Fragment {
     private final int REQUEST_TEXT = 0;
+
+    private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private String userUID;
+
+
+    private Map<String,Object> entries;
+    private List<String> listOfDates;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        userUID = mAuth.getCurrentUser().getUid();
+
+        System.out.println("HELLOD EBU1231232G");
+
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,8 +61,41 @@ public class FragmentHistory extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        String[] test = {"2/20/18","2/21/18","2/22/18","2/23/18","2/24/18","2/25/18","2/26/18","2/27/18"};
-        ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, test);
+
+        System.out.println(userUID);
+        if (mDatabase != null) {
+            mDatabase.child("Users").child(userUID).child("Entries").
+                    addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            System.out.println("TESTING3");
+                            entries = (Map<String, Object>) snapshot.getValue();
+                            listOfDates = new ArrayList<String>(entries.keySet());
+                            System.out.println("TESTING2");
+                            System.out.println(listOfDates);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            System.out.println("TESTING4");
+                        }
+
+                    });
+        } else {
+            System.out.println("DATABSE NULL");
+        }
+
+//        String[] test = {"2/20/18","2/21/18","2/22/18","2/23/18","2/24/18","2/25/18","2/26/18","2/27/18"};
+        System.out.println("TESTING");
+        System.out.println(listOfDates);
+
+        // TODO CONNOR BELOW
+        // listOfDates is list of dates
+        // you can get entry by doing a entries.get(<INSERT DATE HERE>) ** HAS TO BE CORRECT FORMATTED DATE
+        // For above, might have to redo formatting so that it's consistent like 030418
+
+        ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listOfDates);
         ListView historyListView = (ListView) getView().findViewById(R.id.historyList);
         historyListView.setAdapter(historyAdapter);
 
