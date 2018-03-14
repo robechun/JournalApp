@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +59,7 @@ public class FragmentHistory extends Fragment {
         return inflater.inflate(R.layout.fragment_history, container, false);
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,16 +88,30 @@ public class FragmentHistory extends Fragment {
             System.out.println("DATABSE NULL");
         }
 
-//        String[] test = {"2/20/18","2/21/18","2/22/18","2/23/18","2/24/18","2/25/18","2/26/18","2/27/18"};
-        System.out.println("TESTING");
-        System.out.println(listOfDates);
-
-        // TODO CONNOR BELOW
-        // listOfDates is list of dates
-        // you can get entry by doing a entries.get(<INSERT DATE HERE>) ** HAS TO BE CORRECT FORMATTED DATE
-        // For above, might have to redo formatting so that it's consistent like 030418
-
         if(listOfDates != null) {
+            Collections.sort(listOfDates);
+           for(int x = 0; x < listOfDates.size(); x++)
+           {
+               String tempDate = listOfDates.get(x);
+               String tempFormattedDate = tempDate.substring(0,2) + "/" + tempDate.substring(2,4) + "/" + tempDate.substring(4,6);
+               String tempPerfectedDate;
+               String tempMostPerfectedDate;
+               if(tempFormattedDate.charAt(0) == '0') {
+                   tempPerfectedDate = tempFormattedDate.substring(1);
+               }
+               else{
+                   tempPerfectedDate = tempFormattedDate;
+               }
+               if(tempFormattedDate.charAt(3) == '0') {
+                   tempMostPerfectedDate = tempPerfectedDate.substring(0,1+tempPerfectedDate.indexOf("/"));
+                   tempMostPerfectedDate += tempFormattedDate.substring(4);
+               }
+               else{
+                   tempMostPerfectedDate = tempPerfectedDate.substring(0,1+ tempPerfectedDate.indexOf("/"));
+                   tempMostPerfectedDate += tempFormattedDate.substring(3);
+               }
+               listOfDates.set(x,tempMostPerfectedDate);
+           }
             ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listOfDates);
             ListView historyListView = (ListView) getView().findViewById(R.id.historyList);
             historyListView.setAdapter(historyAdapter);
@@ -104,7 +120,26 @@ public class FragmentHistory extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                             String date = ((TextView)view).getText().toString();
-                            String text = entries.get(date).toString();
+
+                            String textDate;
+                            String [] dates = date.split("/");
+                            if(dates[0].length() < 2)
+                            {
+                                textDate = "0" + dates[0];
+                            }
+                            else{
+                                textDate = dates[0];
+                            }
+                            if(dates[1].length() < 2)
+                            {
+                                textDate += "0" + dates[1];
+                            }
+                            else{
+                                textDate += dates[1];
+                            }
+
+                            textDate += dates[2];
+                            String text = entries.get(textDate).toString();
                             AlertDialog.Builder myAlert = new AlertDialog.Builder(getActivity());
                             myAlert.setMessage(text)
                                     .setPositiveButton("Finished!", new DialogInterface.OnClickListener() {

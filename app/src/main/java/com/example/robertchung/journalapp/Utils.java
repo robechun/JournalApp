@@ -18,7 +18,7 @@ public class Utils {
     public static void generateNotification(Context context){
 
         android.support.v7.app.NotificationCompat.Builder nb= new android.support.v7.app.NotificationCompat.Builder(context);
-        nb.setSmallIcon(R.drawable.messenger_bubble_large_blue);
+        nb.setSmallIcon(R.drawable.ic_launcher_background);
         nb.setContentTitle("Its time to journal!");
         nb.setTicker("Take a look");
 

@@ -3,7 +3,6 @@ package com.example.robertchung.journalapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.health.SystemHealthManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -49,7 +48,23 @@ public class FragmentToday extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         calendar = Calendar.getInstance();
         dateFormatted = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
-        newDateFormatted = dateFormatted.replaceAll("/","");
+        String [] dates = dateFormatted.split("/");
+        if(dates[0].length() < 2)
+        {
+            newDateFormatted = "0" + dates[0];
+        }
+        else{
+            newDateFormatted = dates[0];
+        }
+        if(dates[1].length() < 2)
+        {
+            newDateFormatted += "0" + dates[1];
+        }
+        else{
+            newDateFormatted += dates[1];
+        }
+
+        newDateFormatted += dates[2];
 
         userUID = mAuth.getCurrentUser().getUid();
 
