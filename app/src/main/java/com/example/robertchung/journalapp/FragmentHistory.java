@@ -72,7 +72,11 @@ public class FragmentHistory extends Fragment {
                         public void onDataChange(DataSnapshot snapshot) {
                             System.out.println("TESTING3");
                             entries = (Map<String, Object>) snapshot.getValue();
-                            listOfDates = new ArrayList<String>(entries.keySet());
+                            try {
+                                listOfDates = new ArrayList<String>(entries.keySet());
+                            } catch (Exception e) {
+                                System.out.println("Bug");
+                            }
                             System.out.println("TESTING2");
                             System.out.println(listOfDates);
 
@@ -90,28 +94,28 @@ public class FragmentHistory extends Fragment {
 
         if(listOfDates != null) {
             Collections.sort(listOfDates);
-           for(int x = 0; x < listOfDates.size(); x++)
-           {
-               String tempDate = listOfDates.get(x);
-               String tempFormattedDate = tempDate.substring(0,2) + "/" + tempDate.substring(2,4) + "/" + tempDate.substring(4,6);
-               String tempPerfectedDate;
-               String tempMostPerfectedDate;
-               if(tempFormattedDate.charAt(0) == '0') {
-                   tempPerfectedDate = tempFormattedDate.substring(1);
-               }
-               else{
-                   tempPerfectedDate = tempFormattedDate;
-               }
-               if(tempFormattedDate.charAt(3) == '0') {
-                   tempMostPerfectedDate = tempPerfectedDate.substring(0,1+tempPerfectedDate.indexOf("/"));
-                   tempMostPerfectedDate += tempFormattedDate.substring(4);
-               }
-               else{
-                   tempMostPerfectedDate = tempPerfectedDate.substring(0,1+ tempPerfectedDate.indexOf("/"));
-                   tempMostPerfectedDate += tempFormattedDate.substring(3);
-               }
-               listOfDates.set(x,tempMostPerfectedDate);
-           }
+            for(int x = 0; x < listOfDates.size(); x++)
+            {
+                String tempDate = listOfDates.get(x);
+                String tempFormattedDate = tempDate.substring(0,2) + "/" + tempDate.substring(2,4) + "/" + tempDate.substring(4,6);
+                String tempPerfectedDate;
+                String tempMostPerfectedDate;
+                if(tempFormattedDate.charAt(0) == '0') {
+                    tempPerfectedDate = tempFormattedDate.substring(1);
+                }
+                else{
+                    tempPerfectedDate = tempFormattedDate;
+                }
+                if(tempFormattedDate.charAt(3) == '0') {
+                    tempMostPerfectedDate = tempPerfectedDate.substring(0,1+tempPerfectedDate.indexOf("/"));
+                    tempMostPerfectedDate += tempFormattedDate.substring(4);
+                }
+                else{
+                    tempMostPerfectedDate = tempPerfectedDate.substring(0,1+ tempPerfectedDate.indexOf("/"));
+                    tempMostPerfectedDate += tempFormattedDate.substring(3);
+                }
+                listOfDates.set(x,tempMostPerfectedDate);
+            }
             ListAdapter historyAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, listOfDates);
             ListView historyListView = (ListView) getView().findViewById(R.id.historyList);
             historyListView.setAdapter(historyAdapter);
