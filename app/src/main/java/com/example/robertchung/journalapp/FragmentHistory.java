@@ -64,21 +64,20 @@ public class FragmentHistory extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        System.out.println(userUID);
+
+        // Grab all the entries for that user
         if (mDatabase != null) {
             mDatabase.child("Users").child(userUID).child("Entries").
                     addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
-                            System.out.println("TESTING3");
                             entries = (Map<String, Object>) snapshot.getValue();
                             try {
                                 listOfDates = new ArrayList<String>(entries.keySet());
                             } catch (Exception e) {
-                                System.out.println("Bug");
+                                System.out.println(listOfDates);
                             }
-                            System.out.println("TESTING2");
-                            System.out.println(listOfDates);
+
 
                         }
 
@@ -92,6 +91,8 @@ public class FragmentHistory extends Fragment {
             System.out.println("DATABSE NULL");
         }
 
+
+        // Format the dates into the ListView
         if(listOfDates != null) {
             Collections.sort(listOfDates);
             for(int x = 0; x < listOfDates.size(); x++)

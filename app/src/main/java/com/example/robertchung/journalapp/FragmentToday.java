@@ -47,6 +47,8 @@ public class FragmentToday extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         calendar = Calendar.getInstance();
+
+        // FORMATTING DATES
         dateFormatted = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
         String [] dates = dateFormatted.split("/");
         if(dates[0].length() < 2)
