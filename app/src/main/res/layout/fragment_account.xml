@@ -8,13 +8,12 @@
     android:padding="10dp"
     tools:context="com.example.robertchung.journalapp.FragmentAccount">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <Button
         android:id="@+id/logout"
         android:layout_width="96dp"
         android:layout_height="52dp"
-        android:text="logout"
+        android:text="@string/logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.979"
@@ -39,7 +38,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:clickable="true"
-        android:text="ON"
+        android:focusable="true"
+        android:text="@string/on"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +53,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:text="OFF"
+        android:focusable="true"
+        android:text="@string/off"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

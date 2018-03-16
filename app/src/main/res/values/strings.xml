@@ -31,4 +31,16 @@
     <string name="title">Daily Journal</string>
     <string name="time">It is time to journal!</string>
 
+    <!-- Strings Related to Account -->
+    <string name="logout">Logout</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+
+    <!-- Strings Related to Today -->
+    <string name="TypeHere">Type here....</string>
+
+    <!-- Strings Related to Notification-->
+    <string name="journal_notification">Its time to journal!</string>
+    <string name="notification_title">Take a look</string>
+
 </resources>

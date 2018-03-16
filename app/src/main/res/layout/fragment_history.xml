@@ -6,7 +6,6 @@
     android:background="?android:windowBackground"
     tools:context="com.example.robertchung.journalapp.FragmentHistory">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <ListView
         android:id="@+id/historyList"

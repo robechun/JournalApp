@@ -19,8 +19,8 @@ public class Utils {
 
         android.support.v7.app.NotificationCompat.Builder nb= new android.support.v7.app.NotificationCompat.Builder(context);
         nb.setSmallIcon(R.drawable.ic_launcher_background);
-        nb.setContentTitle("Its time to journal!");
-        nb.setTicker("Take a look");
+        nb.setContentTitle(context.getResources().getString(R.string.journal_notification));
+        nb.setTicker(context.getResources().getString(R.string.notification_title));
 
         nb.setAutoCancel(true);
 
@@ -29,7 +29,7 @@ public class Utils {
         //get the bitmap to show in notification bar
         Bitmap bitmap_image = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_home_black_24dp);
         android.support.v7.app.NotificationCompat.BigPictureStyle s = new android.support.v7.app.NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
-        s.setSummaryText("Its time to journal!");
+        s.setSummaryText(context.getResources().getString(R.string.journal_notification));
         nb.setStyle(s);
 
 

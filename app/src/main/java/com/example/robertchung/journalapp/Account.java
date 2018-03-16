@@ -9,7 +9,6 @@ public class Account {
     private String name;
     boolean fromFacebook;
 
-    // TODO: Do I really need these fields?
     // private String/dateTime dates [];
     // private double/int/w/e notificationPref;
 
@@ -27,7 +26,7 @@ public class Account {
         } else {
             email = "Facebook";
         }
-        name = "Robert"; // Default for now, TODO
+        name = "Robert"; // Default for now, can change later
         fromFacebook = fromFb;
     }
 
